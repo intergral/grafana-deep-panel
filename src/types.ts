@@ -1,9 +1,5 @@
-type SeriesSize = 'sm' | 'md' | 'lg';
 
 export interface SnapshotPanelOptions {
-    text: string;
-    showSeriesCount: boolean;
-    seriesCountSize: SeriesSize;
 }
 
 
@@ -55,6 +51,22 @@ export interface Variable {
 
 export interface WatchResult {
     expression: string
-    good_result?: VariableID
-    error_result?: string
+    Result: {
+        GoodResult?: VariableID
+        ErrorResult?: string
+    }
+}
+
+export interface Attributes {
+    [key: string]: string
+}
+
+export interface ResourceAttributes extends Attributes {
+    "service.name": string
+}
+
+export interface SnapshotAttributes extends Attributes {
+    path: string
+    line: string
+    frame: string
 }

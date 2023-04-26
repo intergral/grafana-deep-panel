@@ -22,8 +22,13 @@ const getStyles = () => ({
       margin-right: 5px;
     `,
     varValue: css``,
-    varType: css``,
-    varHash: css``,
+    varType: css`
+      font-style: italic;
+    `,
+    varHash: css`
+      font-weight: lighter;
+      color: #808080
+    `,
     snapVar: css`
       font-family: monospace;
       padding: 5px;
@@ -33,20 +38,38 @@ const getStyles = () => ({
       overflow-y: scroll;
     `,
     varValueLine: css`
+      margin-top: 5px;
       align-items: center;
       display: flex;
+    `,
+    varActions: css`
+      width: 20px;
+      margin-right: 5px;
+      align-items: center;
+      display: flex;
+    `,
+    snapVars: css`
+      border-right: 4px solid #22252b;
     `
 })
 
 export function VariableValue({variableID, lookup, depth}: VariableProps) {
     const styles = useStyles2(getStyles);
     const [open, setOpen] = useState(false)
-    const onClick = (e: any) => {
+    const expandVariable = (e: any) => {
         e.preventDefault()
         e.stopPropagation()
         setOpen(!open)
     }
     const variable = lookup(variableID);
+    if(!variable) {
+        //todo this needs styled
+        return (
+            <div>
+                <span>Cannot find variable: {variableID.name}#{variableID.ID}</span>
+            </div>
+        )
+    }
 
     let variableName = <span className={styles.varName}>{variableID.name}</span>;
     if (variableID.original_name) {
@@ -54,31 +77,40 @@ export function VariableValue({variableID, lookup, depth}: VariableProps) {
             className={styles.varOrigName}>({variableID.original_name})</span></span>
     }
 
+    const copyValue = () => {
+        return navigator.clipboard.writeText(variable.value)
+    }
+
     const menu = (
         <Menu>
-            <Menu.Item label="Google"/>
+            <Menu.Item label="Copy To Clipboard" icon="copy" onClick={copyValue}/>
         </Menu>
     );
 
     return (
         <div className={styles.snapVar}>
-            <div onClick={onClick}>
+            <div onClick={expandVariable}>
                 {variableName} <span className={styles.varHash}>({variable.hash})</span> <span
                 className={styles.varType}>{variable.type}</span>
             </div>
             <div className={styles.varValueLine}>
-                <Dropdown overlay={menu}>
-                    <IconButton name="ellipsis-v"/>
-                </Dropdown>
-                <span onClick={onClick} className={styles.varValue}>{variable.value}</span>
+                <span className={styles.varActions}>
+                    <Dropdown overlay={menu}>
+                        <IconButton name="ellipsis-v"/>
+                    </Dropdown>
+                </span>
+                <span onClick={expandVariable} className={styles.varValue}>{variable.value}</span>
             </div>
             <div>
                 {open &&
                     (
                         <ul>
-                            {variable.children?.map(value => {
-                                return <li className={styles.list}><VariableValue variableID={value} lookup={lookup}
-                                                                                  depth={depth + 1}/></li>
+                            {variable.children?.map((value, index) => {
+                                return <li key={index} className={styles.list}>
+                                    <VariableValue variableID={value}
+                                                   lookup={lookup}
+                                                   depth={depth + 1}/>
+                                </li>
                             })}
                         </ul>
                     )
@@ -97,21 +129,28 @@ export function VariableGroup({lookup, frame, height}: Props) {
     const styles = useStyles2(getStyles);
 
     const lookupFunc = (varId: VariableID) => {
-        return lookup[parseInt(varId.ID)]
+        return lookup?.[parseInt(varId.ID, 10)]
     }
 
     return (
-        <div className={cx(styles.scroll, css`height: ${height}px`)}>
-            <VerticalGroup>
-                <ul>
-                    {
-                        frame?.variables?.map(value => {
-                            return <li className={styles.list}><VariableValue variableID={value} lookup={lookupFunc}
-                                                                              depth={0}/></li>
-                        })
-                    }
-                </ul>
-            </VerticalGroup>
+        <div className={cx(styles.scroll, css`height: ${height}px`, styles.snapVars)}>
+            {!frame?.variables &&
+                <VerticalGroup justify='center' align='center'><span>No Variable data</span></VerticalGroup>}
+            {frame?.variables &&
+                <VerticalGroup>
+                    <ul>
+                        {
+                            frame?.variables?.map((value, index) => {
+                                return <li key={index} className={styles.list}>
+                                    <VariableValue variableID={value}
+                                                   lookup={lookupFunc}
+                                                   depth={0}/>
+                                </li>
+                            })
+                        }
+                    </ul>
+                </VerticalGroup>
+            }
         </div>
     )
 }

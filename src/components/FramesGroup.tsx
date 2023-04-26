@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Icon, useStyles2} from "@grafana/ui";
+import {Icon, useStyles2, VerticalGroup} from "@grafana/ui";
 import {SnapshotFrame} from "../types";
 import {css, cx} from "@emotion/css";
 
@@ -26,8 +26,9 @@ export function FrameItem({frame, onClick}: FrameProps) {
         className = <span className={styles.frameClass}> {frame.class_name}</span>
     }
     return (
-        <div title={`Frame on line ${frame.line_number} of file ${frame.file_name}, in ${frame.class_name ? frame.class_name : ''}#${frame.method_name}`}>
-        <span onClick={(v) => {
+        <div
+            title={`Frame on line ${frame.line_number} of file ${frame.file_name}, in ${frame.class_name ? frame.class_name : ''}#${frame.method_name}`}>
+        <span onClick={() => {
             onClick(frame)
         }}>
             {check} <span className={styles.frameMethod}>{frame.method_name}</span>, <span
@@ -63,14 +64,14 @@ const getStyles = () => ({
       background-color: #353C45
     `,
     frameItem: css`
-        padding: 5px;
-        cursor: pointer;
+      padding: 5px;
+      cursor: pointer;
     `,
     frameList: css`
       border-right: 4px solid #22252b;
     `,
     noVars: css`
-        cursor: not-allowed !important;
+      cursor: not-allowed !important;
     `
 })
 
@@ -80,17 +81,19 @@ export function FramesGroup({frames, onChange, height}: Props) {
 
     return (
         <div className={cx(styles.scroll, css`height: ${height}px`, styles.frameList)}>
-            <ul>
-        {
-            frames.map((frame: SnapshotFrame, index: number) => {
-                return <li className={cx(styles.frameItem, (selectedFrameIndex === index) ? styles.selectedFrame: '', (!frame.variables?.length) ? styles.noVars: '')}>
-                    <FrameItem onClick={() => {
-                    onChange(frame)
-                    setFrameIndex(index)
-                }} frame={frame}></FrameItem></li>
-            })
-        }
-            </ul>
+            {!frames && <VerticalGroup justify='center' align='center'><span>No Frame data</span></VerticalGroup>}
+            {frames &&
+                <ul>
+                    {frames.map((frame: SnapshotFrame, index: number) => {
+                        return <li key={index}
+                            className={cx(styles.frameItem, (selectedFrameIndex === index) ? styles.selectedFrame : '', (!frame.variables?.length) ? styles.noVars : '')}>
+                            <FrameItem onClick={() => {
+                                onChange(frame)
+                                setFrameIndex(index)
+                            }} frame={frame}></FrameItem></li>
+                    })}
+                </ul>
+            }
         </div>
     )
 }

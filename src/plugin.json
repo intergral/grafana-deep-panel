@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Grafana Deep Panel",
-  "id": "intergralgmbh-grafanadeep-panel",
+  "name": "Deep Panel",
+  "id": "intergral-deep-panel",
   "info": {
     "keywords": ["panel"],
     "description": "Panel to render snapshot data",
     "author": {
-      "name": "Intergral gmb h"
+      "name": "Intergral gmbh"
     },
     "logos": {
       "small": "img/logo.svg",
