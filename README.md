@@ -35,7 +35,7 @@ Use panel plugins when you want to do things like visualize data returned by dat
    ```bash
    # Runs the tests and watches for changes, requires git init first
    yarn test
-   
+
    # Exits after running all the tests
    yarn test:ci
    ```
@@ -49,9 +49,9 @@ Use panel plugins when you want to do things like visualize data returned by dat
 6. Run the E2E tests (using Cypress)
 
    ```bash
-   # Spins up a Grafana instance first that we tests against 
+   # Spins up a Grafana instance first that we tests against
    yarn server
-   
+
    # Starts the tests
    yarn e2e
    ```
@@ -60,12 +60,11 @@ Use panel plugins when you want to do things like visualize data returned by dat
 
    ```bash
    yarn lint
-   
+
    # or
 
    yarn lint:fix
    ```
-
 
 # Distributing your plugin
 
@@ -104,8 +103,7 @@ If the plugin is using the github actions supplied with `@grafana/create-plugin`
 To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
 
 1. Run `npm version <major|minor|patch>`
-2. Run `git push origin main --follow-tags`
-
+2. Run `git push origin master --follow-tags`
 
 ## Learn more
 
