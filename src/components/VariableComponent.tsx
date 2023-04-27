@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dropdown, Icon, IconButton, Menu, useStyles2 } from '@grafana/ui';
 import { css } from '@emotion/css';
-import { Variable, VariableID } from '../types';
+import { SnapshotPanelOptions, Variable, VariableID } from '../types';
 
 const getStyles = () => ({
   variable: css`
@@ -28,6 +28,9 @@ const getStyles = () => ({
     margin-right: 5px;
     align-items: center;
     display: flex;
+  `,
+  varModifiers: css`
+    margin-right: 5px;
   `,
   varName: css`
     margin-right: 5px;
@@ -117,7 +120,12 @@ export function VariableDisplay({
           </Dropdown>
         </span>
         {hasChildren && (
-          <Icon className={styles.childIndicator} size={'xl'} name={children ? 'angle-down' : 'angle-right'} />
+          <Icon
+            onClick={clickVariable}
+            className={styles.childIndicator}
+            size={'xl'}
+            name={children ? 'angle-down' : 'angle-right'}
+          />
         )}
         <span
           style={{ cursor: hasChildren ? 'pointer' : 'inherit' }}
@@ -133,21 +141,45 @@ export function VariableDisplay({
 }
 
 export interface VariableProps {
+  options: SnapshotPanelOptions;
   variableID: VariableID;
   lookup: (varId: VariableID) => Variable;
   depth: number;
 }
 
-export function VariableValue({ variableID, lookup, depth }: VariableProps) {
+export function VariableValue({ options, variableID, lookup, depth }: VariableProps) {
   const styles = useStyles2(getStyles);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(depth < options.autoExpandDepth);
 
-  let variableName = <span className={styles.varName}>{variableID.name}</span>;
+  useEffect(() => {
+    setOpen(depth < options.autoExpandDepth);
+  }, [options.autoExpandDepth, depth]);
+
+  let modifiers;
+  if (variableID.modifiers?.length) {
+    modifiers = (
+      <span className={styles.varModifiers} title={variableID.modifiers.join(' ')}>
+        {variableID.modifiers.map((modifier, index) => {
+          return <span key={index}>{modifier[0]}</span>;
+        })}
+      </span>
+    );
+  }
+
+  let variableName = (
+    <span>
+      {modifiers}
+      <span className={styles.varName}>{variableID.name}</span>
+    </span>
+  );
   if (variableID.original_name) {
     variableName = (
       <span>
+        {modifiers}
         <span className={styles.varName}>{variableID.name}</span>
-        <span className={styles.varOrigName}>({variableID.original_name})</span>
+        <span title={'We have renamed this variable, to better suit the source code.'} className={styles.varOrigName}>
+          ({variableID.original_name})
+        </span>
       </span>
     );
   }
@@ -197,7 +229,7 @@ export function VariableValue({ variableID, lookup, depth }: VariableProps) {
           {variable.children?.map((value, index) => {
             return (
               <li key={index} className={styles.list}>
-                <VariableValue variableID={value} lookup={lookup} depth={depth + 1} />
+                <VariableValue options={options} variableID={value} lookup={lookup} depth={depth + 1} />
               </li>
             );
           })}

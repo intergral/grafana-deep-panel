@@ -1,4 +1,4 @@
-import { SnapshotFrame, Variable, VariableID } from '../types';
+import { SnapshotFrame, SnapshotPanelOptions, Variable, VariableID } from '../types';
 import React from 'react';
 import { useStyles2, VerticalGroup } from '@grafana/ui';
 import { css, cx } from '@emotion/css';
@@ -18,12 +18,13 @@ const getStyles = () => ({
 });
 
 export interface Props {
+  options: SnapshotPanelOptions;
   lookup: Variable[];
   frame?: SnapshotFrame;
   height: number;
 }
 
-export function VariableGroup({ lookup, frame, height }: Props) {
+export function VariableGroup({ options, lookup, frame, height }: Props) {
   const styles = useStyles2(getStyles);
 
   const lookupFunc = (varId: VariableID) => {
@@ -51,7 +52,7 @@ export function VariableGroup({ lookup, frame, height }: Props) {
             {frame?.variables?.map((value, index) => {
               return (
                 <li key={index} className={styles.list}>
-                  <VariableValue variableID={value} lookup={lookupFunc} depth={0} />
+                  <VariableValue options={options} variableID={value} lookup={lookupFunc} depth={0} />
                 </li>
               );
             })}

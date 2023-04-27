@@ -40,17 +40,24 @@ export const SnapshotPanel: React.FC<Props> = ({ options, data, width, height })
       <div style={{ display: 'flex' }}>
         <div style={{ minWidth: '500px' }}>
           <FramesGroup
+            options={options}
             frames={data.series[0].fields[4].values.get(0)}
             onChange={(sf) => setCurrentFrame(sf)}
             height={height}
           />
         </div>
         <div style={{ flex: 1 }}>
-          <VariableGroup lookup={data.series[0].fields[2].values.get(0)} frame={selectedFrame} height={height} />
+          <VariableGroup
+            options={options}
+            lookup={data.series[0].fields[2].values.get(0)}
+            frame={selectedFrame}
+            height={height}
+          />
         </div>
 
         <div style={{ minWidth: '500px', maxWidth: '500px' }}>
           <SnapshotMetaGroup
+            options={options}
             lookup={data.series[0].fields[2].values.get(0)}
             tracepoint={data.series[0].fields[1].values.get(0)}
             watchResults={data.series[0].fields[5].values.get(0)}

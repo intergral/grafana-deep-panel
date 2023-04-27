@@ -1,4 +1,8 @@
-export interface SnapshotPanelOptions {}
+export interface SnapshotPanelOptions {
+  onlyAppFrames: boolean;
+  showTranspiled: boolean;
+  autoExpandDepth: number;
+}
 
 export interface SnapshotFrame {
   file_name: string;

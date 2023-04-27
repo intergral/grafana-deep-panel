@@ -2,6 +2,7 @@ import {
   Attributes,
   ResourceAttributes,
   SnapshotAttributes,
+  SnapshotPanelOptions,
   Tracepoint,
   Variable,
   VariableID,
@@ -13,6 +14,7 @@ import { css, cx } from '@emotion/css';
 import { VariableDisplay, VariableValue } from './VariableComponent';
 
 export interface Props {
+  options: SnapshotPanelOptions;
   tracepoint: Tracepoint;
   watchResults?: WatchResult[];
   height: number;
@@ -204,7 +206,15 @@ export function TracepointView({ tracepoint }: { tracepoint: Tracepoint }) {
   );
 }
 
-export function WatchResultsView({ results, lookup }: { lookup: Variable[]; results?: WatchResult[] }) {
+export function WatchResultsView({
+  options,
+  results,
+  lookup,
+}: {
+  options: SnapshotPanelOptions;
+  lookup: Variable[];
+  results?: WatchResult[];
+}) {
   const styles = useStyles2(getStyles);
   if (!results || !results?.length) {
     return (
@@ -234,7 +244,7 @@ export function WatchResultsView({ results, lookup }: { lookup: Variable[]; resu
             <div key={index}>
               {val.Result.GoodResult && (
                 <div>
-                  <VariableValue variableID={val.Result.GoodResult} lookup={lookupFunc} depth={0} />
+                  <VariableValue options={options} variableID={val.Result.GoodResult} lookup={lookupFunc} depth={0} />
                 </div>
               )}
               {val.Result.ErrorResult && (
@@ -295,7 +305,7 @@ export function AttributesView({ attrs, name, link }: { attrs: Attributes; name:
   );
 }
 
-export function SnapshotMetaGroup({ tracepoint, lookup, watchResults, height, resource, attributes }: Props) {
+export function SnapshotMetaGroup({ options, tracepoint, lookup, watchResults, height, resource, attributes }: Props) {
   const styles = useStyles2(getStyles);
   if (watchResults && watchResults.length) {
     tabs[0].active = false;
@@ -341,7 +351,7 @@ export function SnapshotMetaGroup({ tracepoint, lookup, watchResults, height, re
           )}
         >
           {state[0].active && <TracepointView tracepoint={tracepoint} />}
-          {state[1].active && <WatchResultsView lookup={lookup} results={watchResults} />}
+          {state[1].active && <WatchResultsView options={options} lookup={lookup} results={watchResults} />}
           {state[2].active && <AttributesView name="Resource" attrs={resource} />}
           {state[3].active && <AttributesView name="Attribute" attrs={attributes} />}
         </TabContent>
