@@ -18,8 +18,8 @@
     "sign": "npx --yes @grafana/sign-plugin@latest",
     "zip": "./build_zip.sh"
   },
-  "author": "Intergral gmb h",
-  "license": "Apache-2.0",
+  "author": "Intergral gmbh",
+  "license": "AGPL-3.0",
   "devDependencies": {
     "@babel/core": "^7.16.7",
     "@grafana/e2e": "9.3.8",
