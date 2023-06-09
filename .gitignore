@@ -20,6 +20,8 @@ lib-cov
 coverage
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
+intergral-deep-panel-*.zip
+intergral-deep-panel-*.zip.md5
 intergral-deep-panel/
 dist/
 artifacts/
