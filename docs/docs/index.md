@@ -1,9 +1,9 @@
-# Intergral-Deep-Panel Plugin
+# Grafana Deep Panel
 
-This is a custom panel for [Grafana](https://grafana.com) that will render the snapshot data
-from [Deep](https://github.com/intergral/deep).
+The Grafana Deep Panel is a plugin for Grafana that renders the snapshot data that is gathered and stored
+by [DEEP](https://github.com/intergral/deep).
 
-## Usage
+## Setup
 
 Currently, this plugin is not available on the Grafana marketplace. So to use this plugin you need to manually install
 it.
