@@ -1,4 +1,4 @@
-# Intergral-Deep-Panel Plugin
+# Deep Panel Plugin
 
 This is a custom panel for [Grafana](https://grafana.com) that will render the snapshot data
 from [Deep](https://github.com/intergral/deep).
