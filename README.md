@@ -30,7 +30,7 @@ If you are using the unsigned version of the build you need to add an exception 
 
 ## Using Docker
 
-If you are building a container with docker then you can simply use the pre-built [image](https://hub.docker.com/repository/docker/intergral/grafana-deep/general).
+If you are building a container with docker then you can simply use the pre-built [image](https://hub.docker.com/r/intergral/grafana-deep).
 
 ### Existing builds
 
