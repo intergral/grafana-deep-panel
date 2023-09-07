@@ -1,6 +1,6 @@
 {
   "name": "grafana-deep-panel",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Panel to render snapshot data",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",

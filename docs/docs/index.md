@@ -30,20 +30,21 @@ If you are using the unsigned version of the build you need to add an exception 
 
 ## Using Docker
 
-If you are building a container with docker then you can simply use the pre-built [image](https://hub.docker.com/repository/docker/intergral/grafana-deep/general).
+If you are using docker to deploy grafana then you can set the variable `GF_INSTALL_PLUGINS` to include this plugin.
 
-### Existing builds
+```yaml
+  grafana:
+    image: grafana/grafana-oss
+    environment:
+      - GF_INSTALL_PLUGINS=https://github.com/intergral/grafana-deep-panel/releases/download/v0.0.3/intergral-deep-panel-0.0.3.zip;intergral-deep-panel,https://github.com/intergral/grafana-deep-datasource/releases/download/v0.0.7/intergral-deep-datasource-0.0.7.zip;intergral-deep-datasource
+    ports:
+      - "3000:3000"
+```
 
-If you are already building a custom docker image for Grafana then you can use docker build layers to add Deep.
+The above example will install the plugins that are signed for `localhost:3000` if you are using a different value for
+the `app_url` in the `grafana.ini` then you will either have to allow this unsigned plugins or sign this plugin for your host
+value.
 
-```dockerfile
-# Add our image as a build layer
-FROM intergral/grafana-deep:latest as deep
-
-# Now continue your build
-FROM grafana/grafana
-# Copy our plugins from the deep image
-COPY --from=deep /var/lib/grafana/plugins/ /var/lib/grafana/plugins/
-
-# continue with your build steps
+```ini
+allow_loading_unsigned_plugins: intergral-deep-panel,intergral-deep-datasource
 ```
