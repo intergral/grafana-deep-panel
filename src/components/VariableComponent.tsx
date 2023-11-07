@@ -133,7 +133,7 @@ export function VariableDisplay({
       <div className={styles.varValueLine}>
         <span className={styles.varActions}>
           <Dropdown overlay={menu}>
-            <IconButton name="ellipsis-v" aria-label="Actions" tooltip="Variable Actions"/>
+            <IconButton name="ellipsis-v" aria-label="Variable Actions" tooltip="Variable Actions"/>
           </Dropdown>
         </span>
         {hasChildren && (
