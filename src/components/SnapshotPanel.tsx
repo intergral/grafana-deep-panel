@@ -46,8 +46,8 @@ export const SnapshotPanel: React.FC<Props> = ({ options, data, width, height })
   }, [data.series]);
 
 
-  var metaDataHeight = height;
-  var logData;
+  let metaDataHeight = height;
+  let logData;
   if (data.series[0].fields[9].values.get(0)) {
     logData = <div className={cx(
         css`
