@@ -10,5 +10,6 @@ services:
     ports:
       - 3000:3000/tcp # This needs to be port 3000 for e2e tests
     volumes:
+      - /home/bdonnell/repo/github/intergral/grafana-deep-datasource/dist:/var/lib/grafana/plugins/intergral-deep-datasource
       - ./dist:/var/lib/grafana/plugins/grafana-deep-panel
       - ./provisioning:/etc/grafana/provisioning
