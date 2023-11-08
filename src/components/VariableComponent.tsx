@@ -16,7 +16,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Dropdown, Icon, IconButton, Menu, useStyles2 } from '@grafana/ui';
+import {Dropdown, Icon, IconButton, Menu, Tooltip, useStyles2} from '@grafana/ui';
 import { css } from '@emotion/css';
 import { SnapshotPanelOptions, Variable, VariableID } from '../types';
 
@@ -133,16 +133,17 @@ export function VariableDisplay({
       <div className={styles.varValueLine}>
         <span className={styles.varActions}>
           <Dropdown overlay={menu}>
-            <IconButton name="ellipsis-v" aria-label="Variable Actions"/>
+            <IconButton name="ellipsis-v" aria-label="Variable Actions" tooltip="Variable Actions"/>
           </Dropdown>
         </span>
         {hasChildren && (
+            <Tooltip content={(children ? "Collapse" : "Expand") + " children."}>
           <Icon
             onClick={clickVariable}
             className={styles.childIndicator}
             size={'xl'}
             name={children ? 'angle-down' : 'angle-right'}
-          />
+          /></Tooltip>
         )}
         <span
           style={{ cursor: hasChildren ? 'pointer' : 'inherit' }}
