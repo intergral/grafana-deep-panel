@@ -1,5 +1,5 @@
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/intergral/grafana-deep-datasource)
-[![CI](https://github.com/intergral/grafana-deep-datasource/actions/workflows/ci.yml/badge.svg)](https://github.com/intergral/grafana-deep-datasource/actions/workflows/ci.yml)
+[![CI](https://github.com/intergral/grafana-deep-panel/actions/workflows/ci.yml/badge.svg)](https://github.com/intergral/grafana-deep-panel/actions/workflows/ci.yml)
 [![Known Vulnerabilities](https://snyk.io/test/github/intergral/grafana-deep-panel/badge.svg)](https://snyk.io/test/github/intergral/grafana-deep-panel)
 
 # Deep Panel Plugin
