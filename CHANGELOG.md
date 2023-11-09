@@ -1,5 +1,5 @@
 <!-- 1.0.1 Start -->
-# 1.0.1 (xx/xx/2023)
+# 1.0.1 (09/11/2023)
 
 - **[CHANGE]**: update to grafana 10.x.x [#9](https://github.com/intergral/deep/pull/9) [@Umaaz](https://github.com/Umaaz)
 - **[FEATURE]**: add log msg to panel display [#10](https://github.com/intergral/deep/pull/10) [@Umaaz](https://github.com/Umaaz)
