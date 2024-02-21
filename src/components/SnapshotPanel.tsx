@@ -39,23 +39,23 @@ const getStyles = () => ({
 
 export const SnapshotPanel: React.FC<Props> = ({ options, data, width, height }) => {
   const styles = useStyles2(getStyles);
-  const [selectedFrame, setCurrentFrame] = useState<SnapshotFrame>(data.series[0].fields[4].values.get(0)?.[0] ?? null);
+  const [selectedFrame, setCurrentFrame] = useState<SnapshotFrame>(data.series[0].fields[4].values[0]?.[0] ?? null);
 
   useEffect(() => {
-    setCurrentFrame(data.series[0].fields[4].values.get(0)?.[0] ?? null);
+    setCurrentFrame(data.series[0].fields[4].values[0]?.[0] ?? null);
   }, [data.series]);
 
 
   let metaDataHeight = height;
   let logData;
-  if (data.series[0].fields[9].values.get(0)) {
+  if (data.series[0].fields[9].values[0]) {
     logData = <div className={cx(
         css`
           height: ${height * .1}px;
         `
     )}>
       <LogMsg options={options}
-              logMsg={data.series[0].fields[9].values.get(0)}
+              logMsg={data.series[0].fields[9].values[0]}
       />
     </div>
     metaDataHeight = height * .85;
@@ -89,7 +89,7 @@ export const SnapshotPanel: React.FC<Props> = ({ options, data, width, height })
           <div style={{minWidth: '500px'}}>
             <FramesGroup
                 options={options}
-                frames={data.series[0].fields[4].values.get(0)}
+                frames={data.series[0].fields[4].values[0]}
                 onChange={(sf) => setCurrentFrame(sf)}
                 height={metaDataHeight}
             />
@@ -97,7 +97,7 @@ export const SnapshotPanel: React.FC<Props> = ({ options, data, width, height })
           <div style={{flex: 1}}>
             <VariableGroup
                 options={options}
-                lookup={data.series[0].fields[2].values.get(0)}
+                lookup={data.series[0].fields[2].values[0]}
                 frame={selectedFrame}
                 height={metaDataHeight}
             />
@@ -106,11 +106,11 @@ export const SnapshotPanel: React.FC<Props> = ({ options, data, width, height })
           <div style={{minWidth: '500px', maxWidth: '500px'}}>
             <SnapshotMetaGroup
                 options={options}
-                lookup={data.series[0].fields[2].values.get(0)}
-                tracepoint={data.series[0].fields[1].values.get(0)}
-                watchResults={data.series[0].fields[5].values.get(0)}
-                attributes={data.series[0].fields[6].values.get(0)}
-                resource={data.series[0].fields[8].values.get(0)}
+                lookup={data.series[0].fields[2].values[0]}
+                tracepoint={data.series[0].fields[1].values[0]}
+                watchResults={data.series[0].fields[5].values[0]}
+                attributes={data.series[0].fields[6].values[0]}
+                resource={data.series[0].fields[8].values[0]}
                 height={metaDataHeight}
             />
           </div>
