@@ -35,6 +35,7 @@ export interface Props {
   tracepoint: Tracepoint;
   watchResults?: WatchResult[];
   height: number;
+  width: number;
   lookup: Variable[];
   resource: ResourceAttributes;
   attributes: SnapshotAttributes;
@@ -227,10 +228,12 @@ export function WatchResultsView({
   options,
   results,
   lookup,
+    width
 }: {
   options: SnapshotPanelOptions;
   lookup: Variable[];
   results?: WatchResult[];
+  width: number;
 }) {
   const styles = useStyles2(getStyles);
   if (!results || !results?.length) {
@@ -261,19 +264,21 @@ export function WatchResultsView({
             <div key={index}>
               {val.Result.GoodResult && (
                 <div>
-                  <VariableValue options={options} variableID={val.Result.GoodResult} lookup={lookupFunc} depth={0} />
+                  <VariableValue options={options} variableID={val.Result.GoodResult} lookup={lookupFunc} depth={0} width={width}/>
                 </div>
               )}
               {val.Result.ErrorResult && (
                 <div>
                   <VariableDisplay
                     name={val.expression}
-                    type={
+                    hash={
                       <span title={'Could not execute expression.'} className={styles.error}>
                         watch error
                       </span>
                     }
+                    type={'<error>'}
                     value={val.Result.ErrorResult}
+                    width={width}
                   />
                 </div>
               )}
@@ -322,7 +327,7 @@ export function AttributesView({ attrs, name, link }: { attrs: Attributes; name:
   );
 }
 
-export function SnapshotMetaGroup({ options, tracepoint, lookup, watchResults, height, resource, attributes }: Props) {
+export function SnapshotMetaGroup({ options, tracepoint, lookup, watchResults, height, resource, attributes, width}: Props) {
   const styles = useStyles2(getStyles);
   if (watchResults && watchResults.length) {
     tabs[0].active = false;
@@ -368,7 +373,7 @@ export function SnapshotMetaGroup({ options, tracepoint, lookup, watchResults, h
           )}
         >
           {state[0].active && <TracepointView tracepoint={tracepoint} />}
-          {state[1].active && <WatchResultsView options={options} lookup={lookup} results={watchResults} />}
+          {state[1].active && <WatchResultsView options={options} lookup={lookup} results={watchResults} width={width} />}
           {state[2].active && <AttributesView name="Resource" attrs={resource} />}
           {state[3].active && <AttributesView name="Attribute" attrs={attributes} />}
         </TabContent>

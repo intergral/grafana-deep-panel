@@ -1,7 +1,8 @@
 <!-- unreleased Start -->
 # unreleased (xx/xx/2024)
 
-- **[CHANGE]**: chore(update): update grafana to 20.3.3 [#23](https://github.com/intergral/deep/pull/23) [@user](https://github.com/user)
+- **[CHANGE]**: update: update grafana to 20.3.3 [#23](https://github.com/intergral/deep/pull/23) [@user](https://github.com/user)
+- **[ENHANCEMENT]**: panel: fix scaling issues on panel [#24](https://github.com/intergral/deep/pull/24) [@user](https://github.com/user)
 
 <!-- unreleased END -->
 

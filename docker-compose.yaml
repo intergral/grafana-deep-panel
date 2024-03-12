@@ -9,6 +9,8 @@ services:
         grafana_version: ${GRAFANA_VERSION:-10.2.0}
     ports:
       - 3000:3000/tcp # This needs to be port 3000 for e2e tests
+    environment:
+      GF_INSTALL_PLUGINS: yesoreyeram-infinity-datasource
     volumes:
       - /home/bdonnell/repo/github/intergral/grafana-deep-datasource/dist:/var/lib/grafana/plugins/intergral-deep-datasource
       - ./dist:/var/lib/grafana/plugins/grafana-deep-panel

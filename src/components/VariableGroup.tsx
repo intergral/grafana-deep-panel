@@ -28,6 +28,7 @@ const getStyles = () => ({
   `,
   scroll: css`
     overflow-y: scroll;
+    overflow-x: hidden;
   `,
   snapVars: css`
     border-right: 4px solid #22252b;
@@ -39,13 +40,23 @@ export interface Props {
   lookup: Variable[];
   frame?: SnapshotFrame;
   height: number;
+  width: number;
 }
 
-export function VariableGroup({ options, lookup, frame, height }: Props) {
+export function VariableGroup({ options, lookup, frame, height, width }: Props) {
   const styles = useStyles2(getStyles);
 
   const lookupFunc = (varId: VariableID) => {
-    return lookup?.[parseInt(varId.ID, 10)];
+    const variable = lookup?.[parseInt(varId.ID, 10)];
+    if (variable === undefined){
+      return undefined
+    }
+    if (Object.keys(variable).length === 0) {
+      return  {
+        value: "null"
+      } as Variable
+    }
+    return variable;
   };
 
   return (
@@ -54,6 +65,9 @@ export function VariableGroup({ options, lookup, frame, height }: Props) {
         styles.scroll,
         css`
           height: ${height}px;
+          width: ${width}px;
+          min-width: ${width}px;
+          max-width: ${width}px;
         `,
         styles.snapVars
       )}
@@ -64,12 +78,17 @@ export function VariableGroup({ options, lookup, frame, height }: Props) {
         </VerticalGroup>
       )}
       {frame?.variables && (
-        <VerticalGroup>
-          <ul>
+        <VerticalGroup justify={"flex-start"} align={"flex-start"} width={`${width}`}>
+          <ul className={cx(css`
+          height: ${height}px;
+          width: ${width}px;
+          min-width: ${width}px;
+          max-width: ${width}px;
+        `)}>
             {frame?.variables?.map((value, index) => {
               return (
                 <li key={index} className={styles.list}>
-                  <VariableValue options={options} variableID={value} lookup={lookupFunc} depth={0} />
+                  <VariableValue options={options} variableID={value} lookup={lookupFunc} depth={0} width={width}/>
                 </li>
               );
             })}

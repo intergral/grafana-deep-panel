@@ -33,6 +33,37 @@ export interface Props {
   height: number;
 }
 
+function shortClassName(className: string) {
+  if (!className.includes(".")){
+    return className
+  }
+
+  const parts = className.split('.');
+  const last = parts.pop();
+  return parts.map(p => p[0]).join(".") +'.' + last
+}
+
+function frameTooltip(frame: SnapshotFrame) {
+
+  let location = ''
+  if (frame.line_number) {
+    location += `on line ${frame.line_number} `
+  }
+
+  if(frame.file_name) {
+    if(location) {
+      location += `of file ${frame.file_name},`
+    } else {
+      location += `in file ${frame.file_name},`
+    }
+  }
+
+
+  return `Frame ${location} in ${
+      frame.class_name ? frame.class_name : ''
+  }#${frame.method_name}`;
+}
+
 export function FrameItem({ options, frame, onClick }: FrameProps) {
   const styles = useStyles2(getStyles);
   let check;
@@ -46,7 +77,7 @@ export function FrameItem({ options, frame, onClick }: FrameProps) {
 
   let className;
   if (frame.class_name) {
-    className = <span className={styles.frameClass}> {frame.class_name}</span>;
+    className = <span className={styles.frameClass}> {shortClassName(frame.class_name)}</span>;
   }
 
   let transpiled;
@@ -61,27 +92,29 @@ export function FrameItem({ options, frame, onClick }: FrameProps) {
     );
   }
   return (
-    <div>
+    <>
       <div
-        title={`Frame on line ${frame.line_number} of file ${frame.file_name}, in ${
-          frame.class_name ? frame.class_name : ''
-        }#${frame.method_name}`}
+        title={frameTooltip(frame)}
       >
-        <span
+        <div
           onClick={() => {
             onClick(frame);
           }}
         >
           {check}
           {async} <span className={styles.frameMethod}>{frame.method_name}</span>,{' '}
-          <span className={styles.frameFile}>{frame.file_name}</span>:
-          <span className={styles.frameLine}>{frame.line_number}</span>
+          {
+            frame.file_name ? <span className={styles.frameFile}>{frame.file_name}</span> : <span className={styles.noSource}>{"<unknown sourcefile>"}</span>
+          }
+          {
+            frame.line_number ? <>:<span className={styles.frameLine}>{frame.line_number}</span></> : ''
+          }
           {frame.column_number && <span className={styles.frameLine}>:{frame.column_number}</span>}
           {className}
-        </span>
+        </div>
       </div>
       {transpiled}
-    </div>
+    </>
   );
 }
 
@@ -91,6 +124,7 @@ const getStyles = () => ({
   `,
   scroll: css`
     overflow-y: scroll;
+    overflow-x: hidden;
   `,
   frameMethod: css`
     color: #ff0000;
@@ -107,6 +141,11 @@ const getStyles = () => ({
   `,
   frameClass: css`
     color: rgb(178 211 255);
+    max-width: 450px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
   `,
   selectedFrame: css`
     background-color: #353c45;
@@ -120,7 +159,11 @@ const getStyles = () => ({
   `,
   noVars: css`
     cursor: not-allowed !important;
+    opacity: 0.5;   
   `,
+  noSource: css`
+    color: #afafaf
+  `
 });
 
 export function FramesGroup({ options, frames, onChange, height }: Props) {
@@ -139,7 +182,7 @@ export function FramesGroup({ options, frames, onChange, height }: Props) {
   }, [frames]);
 
   return (
-    <div
+    <div style={{minWidth: '500px', maxWidth: '500px'}}
       className={cx(
         styles.scroll,
         css`
