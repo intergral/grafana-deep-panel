@@ -1,0 +1,4 @@
+apiVersion: 1
+datasources:
+  - name: Json Data
+    type: yesoreyeram-infinity-datasource
