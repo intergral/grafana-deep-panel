@@ -17,7 +17,7 @@
 
 import React, { useEffect, useState } from 'react';
 import {Dropdown, Icon, IconButton, Menu, Tooltip, useStyles2} from '@grafana/ui';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { SnapshotPanelOptions, Variable, VariableID } from '../types';
 
 const getStyles = () => ({
@@ -28,7 +28,11 @@ const getStyles = () => ({
   variableHash: css`
     font-style: italic;
   `,
-  varValue: css``,
+  varValue: css`
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  `,
   childIndicator: css`
     margin-right: 5px;
   `,
@@ -39,6 +43,10 @@ const getStyles = () => ({
   `,
   varType: css`
     font-style: italic;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
   `,
   varActions: css`
     width: 20px;
@@ -72,14 +80,16 @@ const getStyles = () => ({
 
 interface VariableDisplayProps {
   name: string | JSX.Element;
-  type: string | JSX.Element;
+  type: string;
   value: string;
   id?: string;
   hash?: string | JSX.Element;
   children?: JSX.Element | boolean;
   hasChildren?: boolean;
+  open?: boolean;
   onClick?: (id?: string) => void;
   menu?: JSX.Element;
+  width: number;
 }
 
 export function VariableDisplay({
@@ -92,6 +102,8 @@ export function VariableDisplay({
   onClick,
   hasChildren = false,
   menu,
+  width,
+  open,
 }: VariableDisplayProps) {
   const styles = useStyles2(getStyles);
 
@@ -109,10 +121,6 @@ export function VariableDisplay({
     hash = <span className={styles.varHash}>({hash})</span>;
   }
 
-  if (typeof type === 'string') {
-    type = <span className={styles.varType}>{type}</span>;
-  }
-
   menu = menu ?? (
     <Menu>
       <Menu.Item
@@ -124,8 +132,15 @@ export function VariableDisplay({
   );
 
   return (
-    <div className={styles.variable}>
-      <div onClick={clickVariable} style={{ cursor: hasChildren ? 'pointer' : 'inherit' }}>
+    <div className={cx(styles.variable,
+      css`
+            width: ${width}px;
+          `)}>
+      <div onClick={clickVariable} style={{ cursor: hasChildren ? 'pointer' : 'inherit' }} className={
+        cx(styles.varType,
+            css`
+            width: ${width}px;
+          `)}>
         {name}
         {hash}
         {type}
@@ -148,7 +163,8 @@ export function VariableDisplay({
         <span
           style={{ cursor: hasChildren ? 'pointer' : 'inherit' }}
           onClick={clickVariable}
-          className={styles.varValue}
+          className={cx(styles.varValue, css`
+            white-space: ${open ? 'inherit': 'nowrap'};`)}
         >
           {value}
         </span>
@@ -161,13 +177,15 @@ export function VariableDisplay({
 export interface VariableProps {
   options: SnapshotPanelOptions;
   variableID: VariableID;
-  lookup: (varId: VariableID) => Variable;
+  lookup: (varId: VariableID) => Variable | undefined;
   depth: number;
+  width: number;
 }
 
-export function VariableValue({ options, variableID, lookup, depth }: VariableProps) {
+export function VariableValue({ options, variableID, lookup, depth, width }: VariableProps) {
   const styles = useStyles2(getStyles);
   const [open, setOpen] = useState(depth < options.autoExpandDepth);
+  width -= 40
 
   useEffect(() => {
     setOpen(depth < options.autoExpandDepth);
@@ -203,17 +221,20 @@ export function VariableValue({ options, variableID, lookup, depth }: VariablePr
   }
 
   const variable = lookup(variableID);
+
   if (!variable) {
     // this case seems unlikely in normal execution, it is mainly here for test cases.
     return (
       <VariableDisplay
         name={variableName}
-        type={
+        hash={
           <span title={'Could not find variable in response.'} className={styles.notFound}>
             not found
           </span>
         }
+        type={"<not found>"}
         value={`Cannot find variable: #${variableID.ID}`}
+        width={width}
       />
     );
   }
@@ -238,16 +259,18 @@ export function VariableValue({ options, variableID, lookup, depth }: VariablePr
       type={variable.type}
       value={variable.value}
       onClick={() => setOpen(!open)}
+      open={open}
       hasChildren={!!variable.children?.length}
       menu={menu}
       hash={variable.hash}
+      width={width}
     >
       {open && (
         <ul style={{ marginLeft: '20px' }}>
           {variable.children?.map((value, index) => {
             return (
               <li key={index} className={styles.list}>
-                <VariableValue options={options} variableID={value} lookup={lookup} depth={depth + 1} />
+                <VariableValue options={options} variableID={value} lookup={lookup} depth={depth + 1} width={width} />
               </li>
             );
           })}

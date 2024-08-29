@@ -1,6 +1,6 @@
 {
   "name": "grafana-deep-panel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Panel to render snapshot data",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
@@ -13,7 +13,7 @@
     "lint:fix": "yarn run lint --fix",
     "e2e": "yarn exec cypress install && yarn exec grafana-e2e run",
     "e2e:update": "yarn exec cypress install && yarn exec grafana-e2e run --update-screenshots",
-    "server": "docker-compose up --build",
+    "server": "docker compose up --build",
     "server-stop": "docker compose down",
     "sign": "npx --yes @grafana/sign-plugin@latest",
     "zip": "./build_zip.sh"
@@ -66,9 +66,9 @@
     "@emotion/css": "^11.11.2",
     "@grafana/data": "10.3.3",
     "@grafana/runtime": "10.3.3",
-    "@grafana/ui": "10.4.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "@grafana/ui": "10.3.3",
+    "react": "18.3.0",
+    "react-dom": "18.3.0",
     "@grafana/schema": "10.3.3",
     "tslib": "2.6.2"
   }
